@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `db_tpe`
 --
-
+CREATE DATABASE IF NOT EXISTS `db_tpe` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `db_tpe`;
 -- --------------------------------------------------------
 
 --
@@ -38,10 +39,10 @@ CREATE TABLE `aerolinea` (
 --
 
 INSERT INTO `aerolinea` (`id_aerolinea`, `nombre`, `imagenAerolinea`) VALUES
-(4, 'Qatar Airways', 'imgs/aerolineas/634d9c97cea37.jpg'),
-(6, 'Iberia', 'imgs/aerolineas/634cbd76d62bb.jpg'),
-(7, 'Latam Airlines', 'imgs/aerolineas/634cbd6c92603.jpg'),
-(15, 'air france', 'imgs/aerolineas/634cbd5c841db.jpg');
+(4, 'Qatar Airways', 'imgs/aerolineas/qatarAirways.jpg'),
+(6, 'Iberia', 'imgs/aerolineas/iberia.jpg'),
+(7, 'Latam Airlines', 'imgs/aerolineas/latam.jpg'),
+(15, 'air france', 'imgs/aerolineas/airFrance.jpg');
 
 -- --------------------------------------------------------
 
@@ -83,10 +84,10 @@ CREATE TABLE `viaje` (
 --
 
 INSERT INTO `viaje` (`id`, `destino`, `fecha`, `precio`, `imagenViaje`, `descripcionDestino`, `id_aerolinea_fk`) VALUES
-(36, 'tandil', '12/5/22', 150000, 'imgs/viajes/634d9b41d7499.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 4),
-(39, 'cancun', '12/5/22', 150000, 'imgs/viajes/634d99fbb6625.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 15),
-(43, 'Barcelona', '12/5/22', 150, 'imgs/viajes/634cc105b5a03.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 15),
-(44, 'Barcelona', '12/5/22', 150000, 'imgs/viajes/634d9b016d260.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 15);
+(36, 'tandil', '12/5/22', 150000, 'imgs/viajes/tandil.jpeg', 'Tandil es una ciudad ubicada en el sudeste de la provincia de Buenos Aires, Argentina, reconocida por su entorno natural, sierras suaves, aire puro y espíritu tranquilo. Rodeada por las Sierras de Tandilia, ofrece paisajes únicos y actividades al aire libre ideales para descansar o explorar. Entre sus atractivos principales se destacan la famosa "Piedra Movediza", el Parque Independencia con su castillo y vistas panorámicas, el Lago del Fuerte y el Cristo de las Sierras. Tandil también es conocida por su excelente gastronomía regional, especialmente sus embutidos y quesos artesanales.', 4),
+(39, 'cancun', '12/5/22', 150000, 'imgs/viajes/cancun.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 15),
+(43, 'Barcelona', '12/5/22', 300000, 'imgs/viajes/barcelona.jpeg', 'Barcelona es una ciudad vibrante ubicada a orillas del mar Mediterráneo en el noreste de España. Famosa por su arquitectura modernista como la Sagrada Familia y el Parque Güell, ofrece historia, cultura, playas y una animada vida urbana que la convierten en uno de los destinos más visitados de Europa.', 15),
+(44, 'Barcelona', '12/5/22', 150000, 'imgs/viajes/viaje4.jpg', 'Cancún está ubicado en la esquina noreste de la Península de Yucatán en México. Esta ciudad está situada en la costa del Mar Caribe a 11 metros por encima del nivel del mar, a 21.17 grados de latitud y a -86.85 de longitud.', 15);
 
 --
 -- Índices para tablas volcadas

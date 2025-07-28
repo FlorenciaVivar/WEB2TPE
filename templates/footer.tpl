@@ -1,12 +1,7 @@
 
 <!-- fin main container -->
 </main>
-<footer class="footer">
-  <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-    <li class="nav-item"><a href="home" class="nav-link px-2 text-muted">Home</a></li>
-    <li class="nav-item"><a href="trips" class="nav-link px-2 text-muted">Viajes</a></li>
-    <li class="nav-item"><a href="aerolineas" class="nav-link px-2 text-muted">Aerolineas</a></li>
-
+<footer class="footer mt-auto py-3 bg-light">
 
   <p class="text-center text-muted">&copy; 2022 Web II Tudai Vivar Florencia</p>
 </footer>

@@ -8,7 +8,7 @@ class UserModel {
         $this->db = new PDO('mysql:host=localhost;'.'dbname=db_tpe;charset=utf8', 'root', '');
     }
 
-//obtengo el usuario de la base de datos
+/*  TRAE EL USUARIO SEGUN SU EMAIL  */
     function getUserByEmail($email) {
         $query = $this->db->prepare("SELECT * FROM user WHERE email = ?");
         $query->execute([$email]);

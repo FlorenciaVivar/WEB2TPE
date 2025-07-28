@@ -1,11 +1,11 @@
 <?php
 //incluimos model view y auth
-require_once './app/models/trip.model.php';
 require_once './app/views/view.php';
+require_once './app/models/trip.model.php';
 require_once './app/helpers/auth.helper.php';
 
-class TripController
-{
+class TripController{
+
     private $model;
     private $view;
     private $authHelper;
@@ -27,10 +27,9 @@ class TripController
     {
         session_start();
         //obtiene las tareas del modelo
-        $trips = $this->model->getAll(); // aca agrego $this->model-> nombre de la funcion del model
+        $trips = $this->model->getAll();
         //actualizo la vista
         $this->view->showTrips($trips);
-        //var_dump($trips)
     }
 
     public function showTrip($id)
@@ -45,8 +44,7 @@ class TripController
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         //verificar si todo llego 
-        if (
-            !empty($_POST['destino']) && !empty($_POST['fecha']) && !empty($_POST['precio']) && !empty($_FILES['imagenViaje']) && !empty($_POST['descripcionDestino']) && !empty($_POST['id_aerolinea_fk'])
+        if (isset($_POST['destino']) && isset($_POST['fecha']) && isset($_POST['precio']) && isset($_FILES['imagenViaje']) && isset($_POST['descripcionDestino']) && isset($_POST['id_aerolinea_fk'])
         ) {
             if ($_FILES['imagenViaje']['type'] == "image/jpg" || $_FILES['imagenViaje']['type'] == "image/jpeg" || $_FILES['imagenViaje']['type'] == "image/png") {
 
@@ -99,14 +97,12 @@ class TripController
         session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
-        // echo $_POST['precio'];
-        // var_dump($_POST);
-        if (!empty($id)&&
-            !empty($_POST['destino']) 
-            && !empty($_POST['fecha']) 
-            && !empty($_POST['precio']) 
-            && !empty($_POST['descripcionDestino']) 
-            && !empty($_POST['id_aerolinea_fk'])
+        if (isset($id)
+            && isset($_POST['destino']) 
+            && isset($_POST['fecha']) 
+            && isset($_POST['precio']) 
+            && isset($_POST['descripcionDestino']) 
+            && isset($_POST['id_aerolinea_fk'])
         ) {
             if ($_FILES['imagenViaje']['type'] == "image/jpg" || $_FILES['imagenViaje']['type'] == "image/jpeg" 
             || $_FILES['imagenViaje']['type'] == "image/png") {
@@ -128,12 +124,12 @@ class TripController
     public function showTripsByAirlineController($id)
     {
        session_start();
-        if(!empty($id)){
-             $trips = $this->model->getTripsByAirlinesModel($id);
+        if(isset($id)){
+            $trips = $this->model->getTripsByAirlinesModel($id);
             $this->view->showTrips($trips);
             return $trips;
         }else{
-            $this->view->showError("Error, no se puede eliminar esta aerolinea");
+            $this->view->showError("No hay viajes de esta aerolinea");
         }
     }
 }

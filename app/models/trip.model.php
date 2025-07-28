@@ -1,38 +1,36 @@
 <?php
-class TripModel
-{
+class TripModel{
+
     private $db; //es private xq nadie se va a conectar desde afuera
 
-    public function __construct()
-    {
-        $this->db = new PDO('mysql:host=localhost;' . 'dbname=db_tpe;charset=utf8', 'root', '');
+    public function __construct(){
+
+        $this->db = new PDO('mysql:host=localhost;'.'dbname=db_tpe;charset=utf8', 'root', '');
     }
-    // Devuelve la lista de viajes completa.
+       /*  TRAE TODOS LOS VIAJES */
     //podemos getAll solo ya que el redundante, los frameworks usan asi getall, insert y remove solo
-    public function getAll()
-    {
+    public function getAll(){
+
         // 1. abro conexión a la DB, ya esta abierta por el constructor de la clase
 
         // 2. ejecuto la sentencia (2 subpasos)
-        $query = $this->db->prepare("SELECT a.id, a.destino, a.fecha, a.precio, a.imagenViaje, a.descripcionDestino, b.nombre AS nombreAerolinea
-        FROM viaje a
-        INNER JOIN aerolinea b
-        ON a.id_aerolinea_fk = id_aerolinea");
+        $query = $this->db->prepare("SELECT v.id, v.destino, v.fecha, v.precio, v.imagenViaje, v.descripcionDestino, a.nombre AS nombreAerolinea
+        FROM viaje v
+        INNER JOIN aerolinea a
+        ON v.id_aerolinea_fk = a.id_aerolinea");
         $query->execute();
-
         // 3. obtengo los resultados
         $trips = $query->fetchAll(PDO::FETCH_OBJ); // devuelve un arreglo de objetos
         return $trips;
     }
 
     /*      TRAE UN VIAJE SEGUN SU ID       */
-    public function getOneTrip($id)
-    {
-        $query = $this->db->prepare('SELECT a.id, a.destino, a.fecha, a.precio, a.imagenViaje, a.descripcionDestino, b.nombre AS nombreAerolinea 
-        FROM viaje a 
-        INNER JOIN aerolinea b 
-        ON a.id_aerolinea_fk = id_aerolinea WHERE id=?');
-        // echo $id;
+    public function getOneTrip($id){
+        
+        $query = $this->db->prepare('SELECT v.id, v.destino, v.fecha, v.precio, v.imagenViaje, v.descripcionDestino, v.id_aerolinea_fk,a.nombre AS nombreAerolinea 
+        FROM viaje v 
+        INNER JOIN aerolinea a 
+        ON v.id_aerolinea_fk = a.id_aerolinea WHERE v.id=?');
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
@@ -56,28 +54,27 @@ class TripModel
     /*   EDITA UN VIAJE   */
     public function editTripModel($id, $destino, $fecha, $precio, $imagenViaje, $descripcionDestino, $airline)
     {
-        // echo 'holaaa';
-
         $pathImg = $this->uploadImage($imagenViaje);
         $query = $this->db->prepare("UPDATE viaje SET destino=?, fecha=?, precio=?, imagenViaje=?, descripcionDestino=?, id_aerolinea_fk=? WHERE id=?");
         $query->execute([$destino, $fecha, $precio, $pathImg, $descripcionDestino, $airline, $id]);
         return $this->db->lastInsertId();
     }
+  
+    /* TRAE TODOS LOS VIAJES SEGUN LA AEROLINEA SELECCIONADA  */
+    public function getTripsByAirlinesModel($id)
+    {
+        $query = $this->db->prepare('SELECT v.id, v.destino, v.fecha, v.precio, v.imagenViaje, v.descripcionDestino, a.nombre AS nombreAerolinea 
+        FROM viaje v 
+        INNER JOIN aerolinea a 
+        ON v.id_aerolinea_fk = id_aerolinea WHERE id_aerolinea_fk=?');
+        $query->execute([$id]);
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
     private function uploadImage($imagenViaje)
     {
         $target = 'imgs/viajes/'.uniqid().'.jpg';
         move_uploaded_file($imagenViaje, $target);
         return $target;
-    }
-    //trae todos los viajes segun la aerolinea seleccionada
-    public function getTripsByAirlinesModel($id)
-    {
-        //okkkk
-        $query = $this->db->prepare('SELECT a.id, a.destino, a.fecha, a.precio, a.imagenViaje, a.descripcionDestino, b.nombre AS nombreAerolinea 
-        FROM viaje a 
-        INNER JOIN aerolinea b 
-        ON a.id_aerolinea_fk = id_aerolinea WHERE id_aerolinea_fk=?');
-        $query->execute([$id]);
-        return $query->fetchAll(PDO::FETCH_OBJ);
     }
 }
