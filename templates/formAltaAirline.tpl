@@ -6,7 +6,7 @@
             <h5 class="mb-0">Agregar nueva Aerolínea</h5>
         </div>
         <div class="card-body">
-            <form action="addNewAirline" method="POST" enctype="multipart/form-data" class="row g-4">
+            <form action="?action=insertAirline" method="POST" enctype="multipart/form-data" class="row g-4">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre de la Aerolínea</label>
                     <input name="nombre" id="nombre" type="text" class="form-control" placeholder="Ej: LATAM" required>

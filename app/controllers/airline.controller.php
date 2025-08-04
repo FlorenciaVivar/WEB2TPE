@@ -1,6 +1,6 @@
 <?php
 //incluimos model y view
-require_once './app/views/view.php';
+require_once './app/views/airline.view.php';
 require_once './app/models/airline.model.php';
 require_once './app/helpers/auth.helper.php';
 
@@ -11,9 +11,11 @@ class AirlineController{
     private $authHelper;
 
     public function __construct(){
-
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         $this->model = new AirlineModel();
-        $this->view = new TripView();
+        $this->view = new AirlineView();
         $this->authHelper = new AuthHelper();
     }
 
@@ -24,46 +26,41 @@ class AirlineController{
     }
 
     public function showAllAirlines(){
-
-        session_start();
         $airlines = $this->getAll(); //sin el model xq accedo a getAll de esta misma
         // //actualizo la vista
         $this->view->showAirlines($airlines);
     }
 
-    public function deleteAirline($id, $trips){
-
-        $this->authHelper->getLoggedUserName(); 
-        //barrera para el que este logueado
+    public function deleteAirline($id, $trips) {
         $this->authHelper->checkLoggedIn();
-        if (empty($trips)) {
-            if (isset($id)) {
-                $this->model->deleteAirlineModel($id);
-                $this->view->showSuccessfully('Aerolinea eliminada con éxito');
-            } else {
-                $this->view->showError("Error al intentar eliminar");
-            } 
+
+        if (!isset($id)) {
+            $this->view->showError("ID de aerolínea no especificado");
+            return;
         }
-        else{
-            $this->view->showError("No se puede eliminar la aerolinea, ya que tiene viajes por realizar");
+
+        if (!empty($trips)) {
+            $this->view->showError("No se puede eliminar la aerolínea, ya que tiene viajes asociados");
+            return;
         }
+
+        $this->model->deleteAirlineModel($id);
+        $this->view->showSuccessfully("Aerolínea eliminada con éxito");
     }
 
-    public function showOneAirlineForModify($id){
 
-        session_start();
+    public function showOneAirlineForModify($id){
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         $airline = $this->model->getOneAirline($id);
-        $this->view->formModifyAirline($airline);
+        $this->view->showFormModifyAirline($airline);
     }
 
     public function editAirlineController($id){
 
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
-        if (!empty($_POST['nombre'])) {
+        if (isset($_POST['nombre']) && trim($_POST['nombre']) !== '')  {
             if ($_FILES['imagenAerolinea']['type'] == "image/jpg" 
             || $_FILES['imagenAerolinea']['type'] == "image/jpeg" 
             || $_FILES['imagenAerolinea']['type'] == "image/png") {
@@ -79,7 +76,6 @@ class AirlineController{
     }
     public function showFormAddAirline(){
 
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         $this->view->showFormAltaAirline();
@@ -100,10 +96,14 @@ class AirlineController{
                 $nombre = $_POST['nombre'];
                 $imagenAerolinea = $_FILES['imagenAerolinea']['tmp_name'];
                 $this->model->insertAirline($nombre, $imagenAerolinea);
-                $this->view->showSuccessfully("Aerolinea agregada con éxito!");
+                header("Location: " . BASE_URL . "aerolineas");
+                exit();
             } else {
                 $this->view->showError("Formato de imagen no permitido");
+                exit();
+
             }
         }
     }
+
 }

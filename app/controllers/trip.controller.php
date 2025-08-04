@@ -1,6 +1,6 @@
 <?php
-//incluimos model view y auth
-require_once './app/views/view.php';
+//incluimos model, view y auth
+require_once './app/views/trip.view.php';
 require_once './app/models/trip.model.php';
 require_once './app/helpers/auth.helper.php';
 
@@ -12,6 +12,9 @@ class TripController{
 
     public function __construct()
     {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         //instacio las clases
         $this->model = new TripModel();
         $this->view = new TripView();
@@ -20,12 +23,10 @@ class TripController{
 
     public function showHome()
     {
-        session_start();
         $this->view->showHome();
     }
     public function showTrips()
     {
-        session_start();
         //obtiene las tareas del modelo
         $trips = $this->model->getAll();
         //actualizo la vista
@@ -34,15 +35,14 @@ class TripController{
 
     public function showTrip($id)
     {
-        session_start();
         $oneTrip = $this->model->getOneTrip($id);
         $this->view->showTrip($oneTrip);
     }
-    function addTrip()
+    public function addTrip()
     {
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
+
         //verificar si todo llego 
         if (isset($_POST['destino']) && isset($_POST['fecha']) && isset($_POST['precio']) && isset($_FILES['imagenViaje']) && isset($_POST['descripcionDestino']) && isset($_POST['id_aerolinea_fk'])
         ) {
@@ -57,7 +57,6 @@ class TripController{
                 $airline = $_POST['id_aerolinea_fk'];
 
                 $this->model->insert($destino, $fecha, $precio, $imagenViaje, $descripcionDestino, $airline);
-                // luego mostras el home o "se creo con exito"
                 $this->view->showSuccessfully("Viaje agregado con éxito!");
 
             } else {
@@ -66,37 +65,41 @@ class TripController{
         }
     }
 
-    function showFormAdd($airlines)
+    public function showAddForm($airlines)
     {
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         $this->view->showFormAltaViaje($airlines); // aca la funcion q despues ponemos en db.php
     }
 
-    function deleteTrip($id)
+    public function deleteTrip($id)
     {
-        session_start();
+        if (!isset($id)) {
+            $this->view->showError("ID no válido.");
+            return;
+        }
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         $this->model->delete($id);
         $this->view->showSuccessfully("Viaje eliminado con éxito!");
-        header("Location: " . BASE_URL . 'trips');
+        exit();
     }
-    function showOneTripForModify($id, $airlines)
+    public function showOneTripForModify($id, $airlines)
     {
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
         $trip = $this->model->getOneTrip($id);
-        $this->view->formModify($trip, $airlines);
+        $this->view->showFormEditTrip($trip, $airlines);
     }
 
-    function editTripController($id)
+    public function showEditForm($id)
     {
-        session_start();
         //barrera para el que este logueado
         $this->authHelper->checkLoggedIn();
+        if (!isset($id)) {
+            $this->view->showError("ID no válido.");
+            return;
+        }
         if (isset($id)
             && isset($_POST['destino']) 
             && isset($_POST['fecha']) 
@@ -121,15 +124,21 @@ class TripController{
             }
         }
     }
-    public function showTripsByAirlineController($id)
-    {
-       session_start();
-        if(isset($id)){
-            $trips = $this->model->getTripsByAirlinesModel($id);
+    public function showTripsByAirlineController($id) {
+        if (!isset($id)) {
+            $this->view->showError("ID de aerolínea no especificado.");
+            return;
+        }
+        $trips = $this->model->getTripsByAirlinesModel($id);
+        if (empty($trips)) {
+            $this->view->showError("No hay viajes para esta aerolínea.");
+        } else {
             $this->view->showTrips($trips);
-            return $trips;
-        }else{
-            $this->view->showError("No hay viajes de esta aerolinea");
         }
     }
+
+    public function getTripsByAirline($idAirline) {
+        return $this->model->getTripsByAirlinesModel($idAirline);
+    }
+
 }

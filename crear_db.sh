@@ -17,6 +17,7 @@ echo "Eliminando base de datos '$DB_NAME' si existe..."
 # Paso 2: Crear e importar la nueva base de datos
 echo "Creando e importando base de datos '$DB_NAME'..."
 "$MYSQL" -h "$HOST" -P "$PORT" -u "$USER" < "$SQL_FILE"
+start http://localhost/proyectos/web2/TPEGoTravelUltimo/
 
 # Verificación
 if [ $? -eq 0 ]; then

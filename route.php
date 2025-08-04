@@ -14,15 +14,17 @@ if (!empty($_GET['action'])) {
 // parsea la accion
 $params = explode('/', $action);
 
-$controller = new TripController();
+$tripController = new TripController();
 $authController = new AuthController();
 $airlineController = new AirlineController();
 
 // tabla de ruteo
 switch ($params[0]) {
     case 'home':
-        $controller->showHome();
+        $tripController->showHome();
         break;
+
+    // RUTAS AUTENTICACIÓN
     case 'login':
         $authController->showFormLogin();
         break;
@@ -32,44 +34,53 @@ switch ($params[0]) {
     case 'validate':
         $authController->validateUser();
         break;
+
+    // RUTAS VIAJES
     case 'trips':
-        $controller->showTrips();
-        break;
-    case 'aerolineas':
-        $airlineController->showAllAirlines();
-        break;
-    case 'add':
-        $airlines = $airlineController->getAll();
-        $controller->showFormAdd($airlines);
+        $tripController->showTrips();
         break;
     case 'addNew':
-        $controller->addTrip();
+        $tripController->addTrip();
         break;
     case 'delete':
         $id = $params[1];                        // obtengo el parametro de la acción
-        $controller->deleteTrip($id);
+        $tripController->deleteTrip($id);
         break;
     case 'modify':
         $id = $params[1];
-        $airlines = $airlineController->getAll();// esto esta mal
-        $controller->showOneTripForModify($id, $airlines);
+        $airlines = $airlineController->getAll();
+        $tripController->showOneTripForModify($id, $airlines);
         break;
     case 'modified':
         $id = $params[1];
-        $controller->editTripController($id);
+        $tripController->showEditForm($id);
         break;
     case 'showTrip':
         $id = $params[1];
-        $controller->showTrip($id);
+        $tripController->showTrip($id);
         break;
     case 'showTripsByAirline':
         $id = $params[1];
-        $controller->showTripsByAirlineController($id);
+        $tripController->showTripsByAirlineController($id);
+        break;
+
+    // RUTAS AEROLÍNEAS
+    case 'aerolineas':
+        $airlineController->showAllAirlines();
+        break;
+    case 'addAirline':
+        $airlineController->showFormAddAirline();
+        break;
+    case 'insertAirline':
+        $airlineController->addAirline();
+        break;
+    case 'add':
+        $airlines = $airlineController->getAll();
+        $tripController->showAddForm($airlines);
         break;
     case 'deleteAirline':
         $id = $params[1];
-        $trips = $controller->showTripsByAirlineController($id);
-        $id = $params[1];
+        $trips = $tripController->getTripsByAirline($id);
         $airlineController->deleteAirline($id, $trips);
         break;
     case 'modifyAirline':
@@ -80,10 +91,8 @@ switch ($params[0]) {
         $id_aerolinea = $params[1];
         $airlineController->editAirlineController($id_aerolinea);
         break;
-    case 'addNewAirline':
-        $airlineController->showFormAddAirline();
-        $airlineController->addAirline();
-        break;    
+
+    // ERROR 404
     default:
         header("HTTP/1.0 404 Not Found");
         echo ('404 Page not found');

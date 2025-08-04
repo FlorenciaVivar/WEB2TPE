@@ -43,7 +43,7 @@
               <a class="nav-link" href="add">Agregar Viaje</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="addNewAirline">Agregar Aerolinea</a>
+              <a class="nav-link" href="addAirline">Agregar Aerolinea</a>
             </li>
           {/if}
         </ul>
