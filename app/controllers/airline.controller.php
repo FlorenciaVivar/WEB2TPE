@@ -99,7 +99,7 @@ class AirlineController{
                 $nombre = $_POST['nombre'];
                 $imagenAerolinea = $_FILES['imagenAerolinea']['tmp_name'];
                 $this->model->insertAirline($nombre, $imagenAerolinea);
-                header("Location: " . BASE_URL . "aerolineas");
+                header("Location: " . BASE_URL . "airlines");
                 exit();
             } else {
                 $this->view->showError("Formato de imagen no permitido");
