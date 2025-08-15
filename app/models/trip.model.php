@@ -136,5 +136,25 @@ class TripModel{
         }
         return null;
     }
+    public function getTripsPaginated($limit, $offset) {
+        $sql = "SELECT v.id, v.destino, v.fecha, v.precio, v.imagenViaje, v.descripcionDestino,
+                   a.nombre AS nombreAerolinea
+            FROM viaje v
+            INNER JOIN aerolinea a ON v.id_aerolinea_fk = a.id_aerolinea
+            LIMIT :limit OFFSET :offset";
+
+        $query = $this->db->prepare($sql);
+        $query->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $query->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function countTrips() {
+        $query = $this->db->prepare("SELECT COUNT(*) AS total FROM viaje");
+        $query->execute();
+        return $query->fetch(PDO::FETCH_OBJ)->total;
+    }
 
 }

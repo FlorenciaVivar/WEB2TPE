@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="container my-4">
-    <h2 class="mb-4 text-center">Viajes </h2>
+    <h2 class="mb-4 text-center">Viajes</h2>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {foreach from=$trips item=$trip}
@@ -28,6 +28,33 @@
             </div>
         {/foreach}
     </div>
+
+    {* Bloque de paginacion *}
+    {if $totalPages > 1}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {if $currentPage > 1}
+                    <li class="page-item">
+                        <a class="page-link" href="?action=trips&page={$currentPage-1}">Anterior</a>
+                    </li>
+                {/if}
+
+                {section name=p start=1 loop=$totalPages+1}
+                    <li class="page-item {if $smarty.section.p.index == $currentPage}active{/if}">
+                        <a class="page-link" href="?action=trips&page={$smarty.section.p.index}">
+                            {$smarty.section.p.index}
+                        </a>
+                    </li>
+                {/section}
+
+                {if $currentPage < $totalPages}
+                    <li class="page-item">
+                        <a class="page-link" href="?action=trips&page={$currentPage+1}">Siguiente</a>
+                    </li>
+                {/if}
+            </ul>
+        </nav>
+    {/if}
 </div>
 
 {include file="footer.tpl"}

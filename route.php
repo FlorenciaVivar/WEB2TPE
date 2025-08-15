@@ -65,7 +65,7 @@ switch ($params[0]) {
         break;
 
     // RUTAS AEROLÍNEAS
-    case 'aerolineas':
+    case 'airlines':
         $airlineController->showAllAirlines();
         break;
     case 'addAirline':

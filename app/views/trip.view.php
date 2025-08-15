@@ -27,18 +27,21 @@ class TripView{
     }
 
     /**
-     * Muestra todos los viajes disponibles.
+     * Muestra todos los viajes disponibles paginado.
      *
-     * @param array $trips Lista de viajes.
+     * @param array $trips Lista de viajes paginado.
      */
-    public function showTrips($trips){
+    public function showTrips($trips, $currentPage = 1, $totalPages = 1){
         if (empty($trips)) {
             $this->showError("No hay viajes disponibles.");
             return;
         }
-        $this->smarty->assign('trips',$trips);
+        $this->smarty->assign('trips', $trips);
+        $this->smarty->assign('currentPage', $currentPage);
+        $this->smarty->assign('totalPages', $totalPages);
         $this->smarty->display('showAllTrips.tpl');
     }
+
 
     /**
      * Muestra los detalles de un viaje específico.

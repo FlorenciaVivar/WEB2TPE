@@ -25,12 +25,18 @@ class TripController{
     {
         $this->view->showHome();
     }
+
     public function showTrips()
     {
-        //obtiene las tareas del modelo
-        $trips = $this->model->getAll();
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 4;
+        $offset = ($page - 1) * $limit;
+
+        $trips = $this->model->getTripsPaginated($limit, $offset);
+        $totalTrips = $this->model->countTrips();
+        $totalPages = ceil($totalTrips / $limit);
         //actualizo la vista
-        $this->view->showTrips($trips);
+        $this->view->showTrips($trips, $page, $totalPages);
     }
 
     public function showTrip($id)

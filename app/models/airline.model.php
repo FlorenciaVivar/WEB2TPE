@@ -21,15 +21,26 @@ class AirlineModel{
      *
      * @return array Lista de objetos de aerolíneas.
      */
-    public function getAll(){
 
-        // 1. abro conexión a la DB (ya esta abierta por el constructor de la clase)
-
-        // 2. ejecuto la sentencia (2 subpasos)
+    public function getAll() {
         $query = $this->db->prepare("SELECT * FROM aerolinea");
         $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getAirlinesPaginated($limit, $offset) {
+        $query = $this->db->prepare('SELECT * FROM aerolinea LIMIT :limit OFFSET :offset');
+        $query->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $query->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $query->execute();
         // 3. obtengo los resultados
-        return $query->fetchAll(PDO::FETCH_OBJ); // devuelve un arreglo de objetos
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function countAirlines() {
+        $query = $this->db->prepare("SELECT COUNT(*) AS total FROM aerolinea");
+        $query->execute();
+        return $query->fetch(PDO::FETCH_OBJ)->total;
     }
 
     /**

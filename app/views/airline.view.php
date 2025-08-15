@@ -17,15 +17,23 @@ class AirlineView {
     }
 
     /**
-     * Muestra la lista de aerolíneas.
+     * Muestra la lista de aerolíneas paginada.
      *
-     * @param array $airlines Lista de objetos de aerolíneas.
+     * @param array $airlines Lista de objetos de aerolíneas paginada.
      * @return void
      */
-    public function showAirlines($airlines) {
+    public function showAirlines($airlines, $currentPage = 1, $totalPages = 1) {
+
+        if (empty($airlines)) {
+            $this->showError("No hay aerolineas disponibles.");
+            return;
+        }
         $this->smarty->assign('airlines', $airlines);
+        $this->smarty->assign('currentPage', $currentPage);
+        $this->smarty->assign('totalPages', $totalPages);
         $this->smarty->display('airlines.tpl');
     }
+
 
     /**
      * Muestra el formulario para modificar una aerolínea.

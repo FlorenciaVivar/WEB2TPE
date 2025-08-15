@@ -24,5 +24,31 @@
                 {/foreach}
         </div>
 </div>
+{* Bloque de paginacion *}
+{if $totalPages > 1}
+        <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                        {if $currentPage > 1}
+                                <li class="page-item">
+                                        <a class="page-link" href="?action=airlines&page={$currentPage-1}">Anterior</a>
+                                </li>
+                        {/if}
 
+                        {section name=p start=1 loop=$totalPages+1}
+                                <li class="page-item {if $smarty.section.p.index == $currentPage}active{/if}">
+                                        <a class="page-link" href="?action=airlines&page={$smarty.section.p.index}">
+                                                {$smarty.section.p.index}
+                                        </a>
+                                </li>
+                        {/section}
+
+                        {if $currentPage < $totalPages}
+                                <li class="page-item">
+                                        <a class="page-link" href="?action=airlines&page={$currentPage+1}">Siguiente</a>
+                                </li>
+                        {/if}
+                </ul>
+        </nav>
+{/if}
+</div>
 {include file="footer.tpl"}

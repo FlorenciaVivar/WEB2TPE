@@ -19,16 +19,20 @@ class AirlineController{
         $this->authHelper = new AuthHelper();
     }
 
-    public function getAll(){
-
-        $airlines = $this->model->getAll();
-        return $airlines;
+    public function getAll() {
+        return $this->model->getAll();
     }
 
     public function showAllAirlines(){
-        $airlines = $this->getAll(); //sin el model xq accedo a getAll de esta misma
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 4;
+        $offset = ($page - 1) * $limit;
+
+        $airlines = $this->model->getAirlinesPaginated($limit, $offset);
+        $totalAirlines = $this->model->countAirlines();
+        $totalPages = ceil($totalAirlines / $limit);
         // //actualizo la vista
-        $this->view->showAirlines($airlines);
+        $this->view->showAirlines($airlines,$page,$totalPages);
     }
 
     public function deleteAirline($id, $trips) {
@@ -47,7 +51,6 @@ class AirlineController{
         $this->model->deleteAirlineModel($id);
         $this->view->showSuccessfully("Aerolínea eliminada con éxito");
     }
-
 
     public function showOneAirlineForModify($id){
         //barrera para el que este logueado

@@ -35,7 +35,7 @@
             <a class="nav-link" href="trips">Viajes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="aerolineas">Aerolineas</a>
+            <a class="nav-link" href="airlines">Aerolineas</a>
           </li>
 
           {if isset($smarty.session.USER_ID)}
